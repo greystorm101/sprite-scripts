@@ -21,10 +21,12 @@ REMOVED_SPRITES_FOLDER = "/path/to/customsprites/Removed"
 DEX_SPREADSHEET_ID = "spreadhseetIDHere"
 DEX_RESPONSE_SHEET_ID = "sheetIDHere"
 DEX_RESPONSE_SHEET_NAME = "RESPONSES"
+DEX_SHEET_FUSION_NAME_COL = "D"
 
 CREDITS_SPREADSHEET_ID = "spreadhseetIDHere"
 CREDITS_CREDIT_SHEET_ID = "sheetIDHere"
 CREDITS_CREDIT_SHEET_NAME = "Credits"
+CREDITS_SHEET_FUSION_NAME_COL = "C"
 
 NUM_SHEET_RETRIES = 5
 
@@ -228,7 +230,7 @@ def debump_fusions(fusion_list:str, dex_res_cache:list = None, dex_appr_cache:li
             pass
         else:
             update_data = {index:new_fusion_name for index in dex_result_rows_affected}
-            update_body_data = make_sheet_update_data(DEX_RESPONSE_SHEET_NAME, update_data, "D")
+            update_body_data = make_sheet_update_data(DEX_RESPONSE_SHEET_NAME, update_data, DEX_SHEET_FUSION_NAME_COL)
             dex_response_update_data.extend(update_body_data)
 
             # Update cache
@@ -242,7 +244,7 @@ def debump_fusions(fusion_list:str, dex_res_cache:list = None, dex_appr_cache:li
             print(f"WARNING: No rows in credit sheet found for fusion {fusion}. THIS SHOULD NOT HAPPEN.")
         else:
             update_data = {index:new_fusion_name for index in credit_rows_affected}
-            update_body_data = make_sheet_update_data(CREDITS_CREDIT_SHEET_NAME, update_data, "D", needs_png=False)
+            update_body_data = make_sheet_update_data(CREDITS_CREDIT_SHEET_NAME, update_data, CREDITS_SHEET_FUSION_NAME_COL, needs_png=False)
             credits_update_data.extend(update_body_data)
 
             # Update cache
@@ -356,7 +358,7 @@ def get_sprites_from_dex_response_sheet() -> list:
     """
     Gets list of fusions in the dex response sheet
     """
-    response_entry_range = f"{DEX_RESPONSE_SHEET_NAME}!D3:D"
+    response_entry_range = f"{DEX_RESPONSE_SHEET_NAME}!{DEX_SHEET_FUSION_NAME_COL}3:{DEX_SHEET_FUSION_NAME_COL}"
     dex_results_entries = _flatten_fusion_list(
                 _get_values_from_google_sheet(DEX_SPREADSHEET_ID, response_entry_range))
     return dex_results_entries
@@ -375,7 +377,7 @@ def get_sprites_from_credit_sheet() -> list:
     """
     Gets list of fusions in the credits sheet
     """
-    response_entry_range = "D2:D"
+    response_entry_range = f"{CREDITS_SHEET_FUSION_NAME_COL}2:{CREDITS_SHEET_FUSION_NAME_COL}"
     dex_results_entries = _flatten_fusion_list(
                 _get_values_from_google_sheet(CREDITS_SPREADSHEET_ID, response_entry_range))
     return dex_results_entries
